@@ -2,7 +2,12 @@
   <Layout class-prefix="layout">
     <NumberPad :value.sync="record.amount" @submit="saveRecord"/>
     <Types :value.sync="record.type"/>
-    <Notes @update:value="onUpdateNotes"/>
+    <div class="notes">
+      <FormItem field-name="备注"
+                placeholder="在这里输入备注"
+                @update:value="onUpdateNotes"
+      />
+    </div>
     <Tags :data-source.sync="tags" @update:value="onUpdateTags"/>
   </Layout>
 </template>
@@ -11,23 +16,22 @@
 import Vue from 'vue';
 import NumberPad from '@/components/Money/NumberPad.vue';
 import Types from '@/components/Money/Types.vue';
-import Notes from '@/components/Money/Notes.vue';
+import FormItem from '@/components/Money/FormItem.vue';
 import Tags from '@/components/Money/Tags.vue';
 import {Component, Watch} from 'vue-property-decorator';
-import model from '@/model';
+import recordListModel from '@/models/recordListModel';
+import tagListModel from '@/models/tagListModel';
 
+const recordList = recordListModel.fetch();
+const tagList = tagListModel.fetch();
 
-
-const recordList = model.fetch();
 
 @Component({
-  components: {Tags, Notes, Types, NumberPad}
+  components: {Tags, FormItem, Types, NumberPad}
 })
 export default class Money extends Vue {
-  tags = ['衣', '食', '住', '行', '彩票'];
-  // eslint-disable-next-line no-undef
+  tags = tagList;
   recordList: RecordItem[] = recordList;
-  // eslint-disable-next-line no-undef
   record: RecordItem = {
     tags: [], notes: '', type: '-', amount: 0
   };
@@ -41,15 +45,14 @@ export default class Money extends Vue {
   }
 
   saveRecord() {
-    // eslint-disable-next-line no-undef
-    const record2: RecordItem = model.clone(this.record);
+    const record2: RecordItem = recordListModel.clone(this.record);
     record2.createdAt = new Date();
     this.recordList.push(record2);
   }
 
   @Watch('recordList')
   onRecordListChange() {
-    model.save(this.recordList);
+    recordListModel.save(this.recordList);
   }
 }
 </script>
@@ -58,5 +61,8 @@ export default class Money extends Vue {
 .layout-content {
   display: flex;
   flex-direction: column-reverse;
+}
+.notes {
+  padding: 12px 0;
 }
 </style>
