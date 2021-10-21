@@ -31,7 +31,9 @@ const tagList = tagListModel.fetch();
 })
 export default class Money extends Vue {
   tags = tagList;
+  // eslint-disable-next-line no-undef
   recordList: RecordItem[] = recordList;
+  // eslint-disable-next-line no-undef
   record: RecordItem = {
     tags: [], notes: '', type: '-', amount: 0
   };
@@ -45,6 +47,7 @@ export default class Money extends Vue {
   }
 
   saveRecord() {
+    // eslint-disable-next-line no-undef
     const record2: RecordItem = recordListModel.clone(this.record);
     record2.createdAt = new Date();
     this.recordList.push(record2);
