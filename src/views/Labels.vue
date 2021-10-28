@@ -18,6 +18,7 @@
 </template>
 
 <script lang="ts">
+
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 import Button from '@/components/Button.vue';
@@ -27,16 +28,17 @@ import Button from '@/components/Button.vue';
   components: {Button}
 })
 export default class Labels extends Vue {
-  tags = window.tagList;
+  // TODO
+  tags = []; //store.tagList; // 知识点1
 
   createTag() {
     const name = window.prompt('请输出标签名');
     if (name) {
-      window.createTag(name);
-      }
+      // TODO
+      // store.createTag(name);
     }
   }
-
+}
 </script>
 
 <style lang="scss" scoped>

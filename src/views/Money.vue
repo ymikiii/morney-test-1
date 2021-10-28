@@ -8,7 +8,7 @@
                 @update:value="onUpdateNotes"
       />
     </div>
-    <Tags :data-source.sync="tags" @update:value="onUpdateTags"/>
+    <Tags/>
   </Layout>
 </template>
 
@@ -21,21 +21,21 @@ import Tags from '@/components/Money/Tags.vue';
 import {Component} from 'vue-property-decorator';
 
 
+
 @Component({
-  components: {Tags, FormItem, Types, NumberPad}
+  components: {Tags, FormItem, Types, NumberPad},
+  computed:{
+    recordList(){
+       return this.$store.state.recordList;
+    }
+  }
 })
 export default class Money extends Vue {
-  // eslint-disable-next-line no-undef
-  tags = tagList.map(value => typeof value === 'string' ? value : value.name);
-  // eslint-disable-next-line no-undef
-  recordList = window.recordList;
-  // eslint-disable-next-line no-undef
   record: RecordItem = {
     tags: [], notes: '', type: '-', amount: 0
   };
-
-  onUpdateTags(value: string[]) {
-    this.record.tags = value;
+  created(){
+    this.$store.commit('fetchRecords')
   }
 
   onUpdateNotes(value: string) {
@@ -43,7 +43,7 @@ export default class Money extends Vue {
   }
 
   saveRecord() {
-    window.createRecord(this.record);
+    this.$store.commit('createRecord',this.record);
   }
 }
 </script>
